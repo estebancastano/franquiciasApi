@@ -1,8 +1,8 @@
 {
   "info": {
     "name": "Franquicias API",
-    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    "description": "Colección de endpoints para la API de Franquicias, Sucursales y Productos desarrollada en Spring Boot.",
+    "_postman_id": "b2e3f6a7-c4d5-4987-bb92-52f123456789",
+    "description": "Colección actualizada de endpoints para la API de Franquicias, Sucursales y Productos desarrollada en Spring Boot con MongoDB.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -23,7 +23,23 @@
       }
     },
     {
-      "name": "2️⃣ Agregar Sucursal a Franquicia",
+      "name": "2️⃣ Actualizar Nombre de Franquicia",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nuevoNombre\": \"Franquicia Internacional\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/franquicias/{{franquiciaId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "franquicias", "{{franquiciaId}}"]
+        }
+      }
+    },
+    {
+      "name": "3️⃣ Crear Sucursal para Franquicia",
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -32,84 +48,14 @@
           "raw": "{\n  \"nombre\": \"Sucursal Norte\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/franquicias/franquicia/1",
+          "raw": "{{baseUrl}}/api/franquicias/{{franquiciaId}}/sucursales",
           "host": ["{{baseUrl}}"],
-          "path": ["api", "franquicias", "franquicia", "1"]
+          "path": ["api", "franquicias", "{{franquiciaId}}", "sucursales"]
         }
       }
     },
     {
-      "name": "3️⃣ Agregar Producto a Sucursal",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Laptop Lenovo\",\n  \"stock\": 50\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/franquicias/sucursal/1",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "franquicias", "sucursal", "1"]
-        }
-      }
-    },
-    {
-      "name": "4️⃣ Eliminar Producto de Sucursal",
-      "request": {
-        "method": "DELETE",
-        "url": {
-          "raw": "{{baseUrl}}/api/franquicias/sucursal/1/producto/2",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "franquicias", "sucursal", "1", "producto", "2"]
-        }
-      }
-    },
-    {
-      "name": "5️⃣ Modificar Stock de Producto",
-      "request": {
-        "method": "PUT",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"nuevoStock\": 120\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/franquicias/5/stock",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "franquicias", "5", "stock"]
-        }
-      }
-    },
-    {
-      "name": "6️⃣ Productos con más stock por sucursal",
-      "request": {
-        "method": "GET",
-        "url": {
-          "raw": "{{baseUrl}}/api/franquicias/max-stock/franquicia/1",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "franquicias", "max-stock", "franquicia", "1"]
-        }
-      }
-    },
-    {
-      "name": "7️⃣ Actualizar nombre de Franquicia",
-      "request": {
-        "method": "PUT",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Franquicia Internacional\"\n}"
-        },
-        "url": {
-          "raw": "{{baseUrl}}/api/franquicias/1",
-          "host": ["{{baseUrl}}"],
-          "path": ["api", "franquicias", "1"]
-        }
-      }
-    },
-    {
-      "name": "8️⃣ Actualizar nombre de Sucursal",
+      "name": "4️⃣ Actualizar Nombre de Sucursal",
       "request": {
         "method": "PUT",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -118,33 +64,119 @@
           "raw": "{\n  \"nombre\": \"Sucursal Central\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/franquicias/2",
+          "raw": "{{baseUrl}}/api/franquicias/{{franquiciaId}}/sucursales/{{sucursalId}}",
           "host": ["{{baseUrl}}"],
-          "path": ["api", "franquicias", "2"]
+          "path": ["api", "franquicias", "{{franquiciaId}}", "sucursales", "{{sucursalId}}"]
         }
       }
     },
     {
-      "name": "9️⃣ Actualizar nombre de Producto",
+      "name": "5️⃣ Crear Producto en Sucursal",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Laptop Lenovo\",\n  \"stock\": 50\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/franquicias/{{franquiciaId}}/sucursales/{{sucursalId}}/productos",
+          "host": ["{{baseUrl}}"],
+          "path": [
+            "api",
+            "franquicias",
+            "{{franquiciaId}}",
+            "sucursales",
+            "{{sucursalId}}",
+            "productos"
+          ]
+        }
+      }
+    },
+    {
+      "name": "6️⃣ Actualizar Nombre de Producto",
       "request": {
         "method": "PUT",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"nombre\": \"Laptop HP EliteBook\"\n}"
+          "raw": "{\n  \"nuevoNombre\": \"Laptop HP EliteBook\"\n}"
         },
         "url": {
-          "raw": "{{baseUrl}}/api/franquicias/3/nombre",
+          "raw": "{{baseUrl}}/api/franquicias/{{franquiciaId}}/sucursales/{{sucursalId}}/productos/{{productoId}}",
           "host": ["{{baseUrl}}"],
-          "path": ["api", "franquicias", "3", "nombre"]
+          "path": [
+            "api",
+            "franquicias",
+            "{{franquiciaId}}",
+            "sucursales",
+            "{{sucursalId}}",
+            "productos",
+            "{{productoId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "7️⃣ Actualizar Stock de Producto",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nuevoStock\": 120\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/franquicias/{{franquiciaId}}/sucursales/{{sucursalId}}/productos/{{productoId}}/stock",
+          "host": ["{{baseUrl}}"],
+          "path": [
+            "api",
+            "franquicias",
+            "{{franquiciaId}}",
+            "sucursales",
+            "{{sucursalId}}",
+            "productos",
+            "{{productoId}}",
+            "stock"
+          ]
+        }
+      }
+    },
+    {
+      "name": "8️⃣ Eliminar Producto",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "{{baseUrl}}/api/franquicias/{{franquiciaId}}/sucursales/{{sucursalId}}/productos/{{productoId}}",
+          "host": ["{{baseUrl}}"],
+          "path": [
+            "api",
+            "franquicias",
+            "{{franquiciaId}}",
+            "sucursales",
+            "{{sucursalId}}",
+            "productos",
+            "{{productoId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "9️⃣ Productos con más stock por Sucursal (de una Franquicia)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/franquicias/{{franquiciaId}}/productos/top-stock",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "franquicias", "{{franquiciaId}}", "productos", "top-stock"]
         }
       }
     }
   ],
   "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:8080"
-    }
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "franquiciaId", "value": "1" },
+    { "key": "sucursalId", "value": "1" },
+    { "key": "productoId", "value": "1" }
   ]
 }
