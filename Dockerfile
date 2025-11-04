@@ -1,26 +1,34 @@
-# Etapa 1: construir el JAR con Maven y Java 21
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+# Multi-stage build for optimized image size
+FROM maven:3.9-eclipse-temurin-21-alpine AS build
+
 WORKDIR /app
 
-# Copiar el pom.xml y descargar dependencias
+# Copy pom.xml and download dependencies
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
-# Copiar el código fuente
+# Copy source code and build
 COPY src ./src
-
-# Compilar el proyecto
 RUN mvn clean package -DskipTests
 
-# Etapa 2: ejecutar el JAR con una imagen liviana
-FROM eclipse-temurin:21-jdk-slim
+# Runtime stage
+FROM eclipse-temurin:21-jre-alpine
+
 WORKDIR /app
 
-# Copiar el JAR generado
+# Create non-root user for security
+RUN addgroup -S spring && adduser -S spring -G spring
+USER spring:spring
+
+# Copy jar from build stage
 COPY --from=build /app/target/*.jar app.jar
 
-# Exponer el puerto
+# Expose port
 EXPOSE 8080
 
-# Comando para ejecutar la app
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+
+# Run application
 ENTRYPOINT ["java", "-jar", "app.jar"]
