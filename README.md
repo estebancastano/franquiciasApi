@@ -1,6 +1,6 @@
 # 🧩 Franquicias API - Nequi Technical Test
 
-API REST para la **gestión de franquicias, sucursales y productos**, desarrollada en **Spring Boot (Java 21)**, con persistencia en **MongoDB**, y preparada para ejecución local mediante **Docker** y despliegue en la nube con **Terraform**.
+API REST para la **gestión de franquicias, sucursales y productos**, desarrollada en **Spring Boot (Java 21)**, con persistencia en **MongoDB**, y preparada para ejecución local mediante **Docker** .
 
 ---
 
@@ -47,7 +47,6 @@ Cada franquicia puede tener múltiples sucursales, y cada sucursal maneja su pro
 - **MongoDB** (almacenamiento de datos)
 - **Maven 3.9+** (gestión de dependencias)
 - **Docker / Docker Compose**
-- **Terraform** (infraestructura como código)
 - **Lombok** (reducción de código repetitivo)
 
 ### Arquitectura del Sistema
@@ -742,10 +741,9 @@ curl http://localhost:8080/actuator/health
 - ✅ Endpoint para actualizar nombre de franquicia
 - ✅ Endpoint para actualizar nombre de sucursal
 - ✅ Endpoint para actualizar nombre de producto
-- ✅ Arquitectura lista para despliegue en nube
 
 ## 👨‍💻 Autor
 
 - Desarrollado por: Esteban Castaño
 - 📅 Prueba Técnica - Nequi (2025)
-- 🚀 Tecnologías: Java 21 · Spring Boot · MongoDB · Docker · Terraform
+- 🚀 Tecnologías: Java 21 · Spring Boot · MongoDB · Docker 
