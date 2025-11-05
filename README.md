@@ -1,6 +1,6 @@
-# Franquicias API - Nequi Technical Test
+# 🧩 Franquicias API - Nequi Technical Test
 
-API REST para la gestión de franquicias, sucursales y productos desarrollada en **Spring Boot**, con persistencia en **Supabase (PostgreSQL)**.
+API REST para la **gestión de franquicias, sucursales y productos**, desarrollada en **Spring Boot (Java 21)**, con persistencia en **MongoDB**, y preparada para ejecución local mediante **Docker** y despliegue en la nube con **Terraform**.
 
 ---
 
@@ -9,28 +9,30 @@ API REST para la gestión de franquicias, sucursales y productos desarrollada en
 - [Descripción](#descripción)
 - [Arquitectura y Tecnologías](#arquitectura-y-tecnologías)
 - [Requisitos Previos](#requisitos-previos)
+- [Configuración de MongoDB](#configuración-de-mongodb)
 - [Instalación y Despliegue](#instalación-y-despliegue)
 - [Documentación de API](#documentación-de-api)
+- [Postman Collection](#postman-collection)
 - [Ejemplos de Uso](#ejemplos-de-uso)
-- [Pruebas](#pruebas)
 - [Buenas Prácticas Implementadas](#buenas-prácticas-implementadas)
+- [Autor](#autor)
 
 ---
 
 ## 🎯 Descripción
 
-Sistema que permite gestionar franquicias con sus respectivas sucursales y productos.  
-Cada franquicia puede tener múltiples sucursales, y cada sucursal maneja un catálogo de productos con su respectivo stock.
+Sistema que permite gestionar **franquicias**, **sucursales** y **productos**.  
+Cada franquicia puede tener múltiples sucursales, y cada sucursal maneja su propio catálogo de productos con su respectivo stock.
 
-### Características Principales
+### Características principales
 
 ✅ CRUD completo de franquicias, sucursales y productos  
-✅ Gestión de stock de productos  
-✅ Consulta de productos con mayor stock por sucursal  
-✅ API REST con validaciones robustas  
-✅ Persistencia en **Supabase (PostgreSQL gestionado)**  
-✅ Despliegue en la nube con Terraform y AWS ECS  
-✅ Arquitectura limpia y escalable
+✅ Gestión y actualización de stock  
+✅ Consulta del producto con más stock por sucursal  
+✅ Persistencia con **MongoDB**  
+✅ Despliegue con **Docker**, **Docker Compose** y **Terraform**  
+✅ Arquitectura limpia basada en DTOs  
+✅ Documentación completa en Postman
 
 ---
 
@@ -38,167 +40,278 @@ Cada franquicia puede tener múltiples sucursales, y cada sucursal maneja un cat
 
 ### Stack Tecnológico
 
-- **Java 17**
-- **Spring Boot 3.2.0**
-- **Supabase (PostgreSQL)**
-- **Maven** - Gestión de dependencias
-- **Docker Desktop** - Ejecución de contenedores
-- **Lombok** - Reducción de código boilerplate
+- **Java 21**
+- **Spring Boot 3.3.0**
+- **MongoDB** (almacenamiento de datos)
+- **Maven 3.9+** (gestión de dependencias)
+- **Docker / Docker Compose**
+- **Terraform** (infraestructura como código)
+- **Lombok** (reducción de código repetitivo)
 
 ### Estructura del Proyecto
 
 ```
 src/
-├── main/java/com/nequi/franquicias/
-│   ├── controller/     # Controladores REST
-│   ├── service/        # Lógica de negocio
-│   ├── repository/     # Acceso a datos (Spring Data JPA)
-│   ├── model/          # Entidades de dominio
-│   ├── dto/            # Data Transfer Objects
-│   ├── exception/      # Manejo de excepciones
-│   └── mapper/         # Conversión de entidades y DTOs
+├── main/java/com/esteban/franquicias_api/
+│ ├── controller/ # Controladores REST
+│ ├── service/ # Lógica de negocio
+│ ├── service/impl/ # Implementaciones funcionales
+│ ├── repository/ # Repositorios (MongoRepository)
+│ ├── model/ # Entidades del dominio
+│ ├── dto/ # Data Transfer Objects
 └── resources/
+├── application.properties
+├── docker-compose.yml
+└── Dockerfile
 ```
 
+
+---
+
 ## 📦 Requisitos Previos
-### Opción 1: Con Docker Desktop
 
-Docker Desktop instalado y en ejecución
+### Opción 1: Con Docker y Docker Compose 🐳
 
-Imagen de Java 17 o contenedor base disponible
+Necesitas tener instalados:
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+- [Docker Compose](https://docs.docker.com/compose/)
 
 ### Opción 2: Sin Docker
 
-Java 17+
+- Java 21+
+- Maven 3.9+
+- MongoDB corriendo localmente (`mongodb://localhost:27017/franquicias_db`)
 
-Maven 3.9+
+---
 
-🗄️ La base de datos está alojada en Supabase, por lo que solo necesitas configurar la conexión.
+## ⚙️ Configuración de MongoDB
 
-## ⚙️ Configuración de Supabase
-
-Crea un proyecto en https://supabase.com
-
-Obtén tus credenciales:
-
-- `host`
-
-- `port`
-
-- `database`
-
-- `user`
-
-- `password`
-
-Configura tu archivo application.properties:
+### Conexión local
 ```bash
-spring.datasource.url=jdbc:postgresql://<host>:<port>/<database>
-spring.datasource.username=<user>
-spring.datasource.password=<password>
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
+spring.data.mongodb.uri=mongodb://localhost:27017/franquicias_db
+spring.data.mongodb.database=franquicias_db
+
 ```
 
 ## 🚀 Instalación y Despliegue
-### Clonar el Repositorio
+### Despliegue con Docker (Recomendado)
+
+1. **Clonar el repositorio**
 
 ```bash
 git clone <repository-url>
 cd franquicias-api
 ```
 
-### Ejecución con Maven
+2. **Iniciar la aplicación con Docker Compose**
+
+```bash
+docker-compose up -d
+```
+
+Este comando:
+- Descarga la imagen de MongoDB
+- Construye la imagen de la aplicación
+- Inicia ambos contenedores
+- Configura la red entre ellos
+
+3. **Verificar que los servicios estén corriendo**
+
+```bash
+docker-compose ps
+```
+
+4. **Ver los logs**
+
+```bash
+docker-compose logs -f app
+```
+
+La API estará disponible en: `http://localhost:8080`
+
+### Despliegue Local (Sin Docker)
+
+1. **Iniciar MongoDB**
+
+```bash
+mongod --dbpath /ruta/a/tu/db
+```
+
+2. **Compilar y ejecutar la aplicación**
 
 ```bash
 mvn clean install
 mvn spring-boot:run
 ```
 
-### Ejecución con Docker Desktop (opcional)
-
-Puedes crear una imagen local y levantarla con:
+O ejecutar el JAR generado:
 
 ```bash
-docker build -t franquicias-api .
-docker run -p 8080:8080 franquicias-api
+java -jar target/franquicias-api-1.0.0.jar
+```
+---
+## 📚 Documentación de API
+### 🔹 Franquicias
+| Método | Endpoint                                    | Descripción                                  |
+| ------ | ------------------------------------------- | -------------------------------------------- |
+| `POST` | `/api/franquicias`                          | Crear franquicia                             |
+| `PUT`  | `/api/franquicias/{id}`                     | Actualizar nombre de franquicia              |
+| `GET`  | `/api/franquicias/{id}/productos/top-stock` | Obtener productos con más stock por sucursal |
+
+### 🔹 Sucursales
+| Método | Endpoint                                                  | Descripción                   |
+| ------ | --------------------------------------------------------- | ----------------------------- |
+| `POST` | `/api/franquicias/{franquiciaId}/sucursales`              | Crear sucursal                |
+| `PUT`  | `/api/franquicias/{franquiciaId}/sucursales/{sucursalId}` | Actualizar nombre de sucursal |
+
+### 🔹 Productos
+| Método   | Endpoint                                                                               | Descripción       |
+| -------- | -------------------------------------------------------------------------------------- | ----------------- |
+| `POST`   | `/api/franquicias/{franquiciaId}/sucursales/{sucursalId}/productos`                    | Crear producto    |
+| `PUT`    | `/api/franquicias/{franquiciaId}/sucursales/{sucursalId}/productos/{productoId}`       | Actualizar nombre |
+| `PUT`    | `/api/franquicias/{franquiciaId}/sucursales/{sucursalId}/productos/{productoId}/stock` | Actualizar stock  |
+| `DELETE` | `/api/franquicias/{franquiciaId}/sucursales/{sucursalId}/productos/{productoId}`       | Eliminar producto |
+
+---
+## 🧪 Postman Collection
+
+El proyecto incluye una colección lista para importar y probar todos los endpoints.
+
+### 🧾 Archivo disponible:
+
+#### 📄 Franquicias_API.postman_collection.json
+
+### 🚀 Cómo importar la colección
+
+1. Abre Postman.
+
+2. Haz clic en **Import → File** y selecciona `postman_collection.json`.
+
+3. Define la variable global:
+
+```
+baseUrl = http://localhost:8080
 ```
 
-### 📚 Documentación de API
+4. Ejecuta las peticiones en el orden sugerido:
+    1. Crear franquicia 
+    2. Agregar sucursal
+    3. Crear producto
+    4. Actualizar o eliminar
+    5. Consultar producto con más stock
 
-#### 1️⃣ Franquicias
 
-```http
-Método	Endpoint	Descripción
-POST	/api/franquicias	Crear franquicia
-PUT	/api/franquicias/{id}	Actualizar nombre de franquicia
-```
+## 🌍 Variables globales sugeridas
+| Variable       | Valor                        | Descripción         |
+| -------------- | ---------------------------- | ------------------- |
+| `baseUrl`      | `http://localhost:8080`      | URL base            |
+| `franquiciaId` | Generado al crear franquicia | ID de la franquicia |
+| `sucursalId`   | Generado al crear sucursal   | ID de la sucursal   |
+| `productoId`   | Generado al crear producto   | ID del producto     |
 
-#### 2️⃣ Sucursales
-
-```http
-Método	Endpoint	Descripción
-POST	/api/franquicias/{franquiciaId}	Agregar sucursal
-PUT	/api/sucursales/{id}	Actualizar nombre
-```
-
-#### 3️⃣ Productos
-
-```http
-Método	Endpoint	Descripción
-POST	/api/sucursal/{sucursalId}	Crear producto
-DELETE	/api/sucursal/{sucursalId}/producto/{productoId}	Eliminar producto
-PUT	/api/productos/{id}/stock	Modificar stock
-PUT	/api/productos/{id}/nombre	Actualizar nombre
-```
-
-#### 4️⃣ Consultas
-
-```http
-Método	Endpoint	Descripción
-GET	/api/max-stock/franquicia/{franquiciaId}	Productos con más stock por sucursal
-```
-
+---
 ## 💡 Ejemplo de flujo completo (cURL)
-
+### 1. Crear franquicia
 ```bash
-# 1. Crear franquicia
 curl -X POST http://localhost:8080/api/franquicias \
 -H "Content-Type: application/json" \
 -d '{"nombre":"Franquicia Nacional"}'
+```
 
-# 2. Crear sucursal
-curl -X POST http://localhost:8080/api/franquicias/1 \
+### 2. Crear sucursal
+```bash
+curl -X POST http://localhost:8080/api/franquicias/<franquiciaId>/sucursales \
 -H "Content-Type: application/json" \
 -d '{"nombre":"Sucursal Centro"}'
+```
 
-# 3. Agregar producto
-curl -X POST http://localhost:8080/api/sucursal/1 \
+### 3. Crear producto
+
+```bash
+curl -X POST http://localhost:8080/api/franquicias/<franquiciaId>/sucursales/<sucursalId>/productos \
 -H "Content-Type: application/json" \
--d '{"nombre":"Laptop Dell", "stock":50}'
+-d '{"nombre":"Laptop Dell","stock":50}'
+```
 
-# 4. Modificar stock
-curl -X PUT http://localhost:8080/api/productos/1/stock \
+### 4. Modificar stock
+
+```bash
+curl -X PUT http://localhost:8080/api/franquicias/<franquiciaId>/sucursales/<sucursalId>/productos/<productoId>/stock \
 -H "Content-Type: application/json" \
 -d '{"nuevoStock":100}'
 ```
 
 ## ✨ Buenas Prácticas Implementadas
 
+### Arquitectura y Diseño
 
-✅ Arquitectura por capas
+- **Separación de responsabilidades**: Capas claramente definidas (Controller, Service, Repository)
+- **Inmutabilidad**: Uso extensivo de campos `final` y objetos inmutables
+- **Principio de Responsabilidad Única**: Cada clase tiene una única responsabilidad
+- **Inyección de dependencias por constructor**: Facilita testing y hace explícitas las dependencias
 
-✅ Validaciones @NotNull, @Min, etc.
+### Código Limpio
 
-✅ Manejo global de excepciones
+- **Lombok optimizado**: Uso de anotaciones específicas (`@Getter`, `@Builder`) en lugar de `@Data`
+- **Java Records**: Para DTOs simples (Java 16+)
+- **Var keyword**: Para variables locales con tipos obvios
+- **Streams API**: Operaciones funcionales en colecciones
+- **Optional**: Para manejar valores que pueden no existir
 
-✅ DTOs con MapStruct o MapperUtils
+### Documentación
 
-✅ Código limpio con Lombok
+- **JavaDoc completo**: En clases y métodos públicos
+- **Nombres descriptivos**: Variables, métodos y clases con nombres claros
+- **README exhaustivo**: Documentación completa del proyecto
 
-✅ Compatible con despliegue en AWS ECS
+
+### DevOps
+
+- **Docker multi-stage build**: Optimiza el tamaño de la imagen
+- **Health checks**: Para monitoreo de contenedores
+- **Docker Compose**: Facilita el despliegue local
+- **Variables de entorno**: Configuración externalizada
+
+## 🔧 Comandos Útiles
+
+```bash
+# Detener todos los contenedores
+docker-compose down
+
+# Reconstruir imágenes
+docker-compose up -d --build
+
+# Ver logs en tiempo real
+docker-compose logs -f
+
+# Conectarse a MongoDB
+docker exec -it franquicias-mongodb mongosh
+
+# Limpiar volúmenes
+docker-compose down -v
+
+# Verificar salud de la aplicación
+curl http://localhost:8080/actuator/health
+```
+
+## 📝 Notas Importantes
+
+1. **Puerto 8080**: Asegúrate de que el puerto 8080 esté disponible
+2. **MongoDB**: Los datos persisten en un volumen de Docker
+3. **IDs generados**: Se usan UUIDs para identificadores únicos
+4. **Validaciones**: Todos los campos requeridos son validados
+
+## 🎖️ Puntos Extra Implementados
+
+- ✅ Empaquetado con Docker
+- ✅ Programación funcional con Streams API
+- ✅ Endpoint para actualizar nombre de franquicia
+- ✅ Endpoint para actualizar nombre de sucursal
+- ✅ Endpoint para actualizar nombre de producto
+- ✅ Arquitectura lista para despliegue en nube
 
 ## 👨‍💻 Autor
 
 - Desarrollado por: Esteban Castaño
-- Prueba Técnica - Nequi (2025)
+- 📅 Prueba Técnica - Nequi (2025)
+- 🚀 Tecnologías: Java 21 · Spring Boot · MongoDB · Docker · Terraform

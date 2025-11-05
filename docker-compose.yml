@@ -9,7 +9,7 @@ services:
     depends_on:
       - mongo
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/franquicias_db
+      SPRING_DATA_MONGODB_URI: mongodb+srv://estebin5372_db_user:XaF1cLlRIQFPMPwd@franquicias-api.rtwa4i0.mongodb.net/?appName=franquicias-api
     networks:
       - app_network
 
