@@ -6,16 +6,16 @@ API REST para la **gestión de franquicias, sucursales y productos**, desarrolla
 
 ## 📋 Tabla de Contenidos
 
-- [Descripción](#descripción)
-- [Arquitectura y Tecnologías](#arquitectura-y-tecnologías)
-- [Requisitos Previos](#requisitos-previos)
-- [Configuración de MongoDB](#configuración-de-mongodb)
-- [Instalación y Despliegue](#instalación-y-despliegue)
-- [Documentación de API](#documentación-de-api)
-- [Postman Collection](#postman-collection)
-- [Ejemplos de Uso](#ejemplos-de-uso)
-- [Buenas Prácticas Implementadas](#buenas-prácticas-implementadas)
-- [Autor](#autor)
+- [Descripción](#-descripción)
+- [Arquitectura y Tecnologías](#-arquitectura-y-tecnologías)
+- [Requisitos Previos](#-requisitos-previos)
+- [Configuración de MongoDB](#-configuración-de-mongodb)
+- [Instalación y Despliegue](#-instalación-y-despliegue)
+- [Documentación de API](#-documentación-de-api)
+- [Postman Collection](#-postman-collection)
+- [Ejemplos de Uso](#-ejemplos-de-uso)
+- [Buenas Prácticas Implementadas](#-buenas-prácticas-implementadas)
+- [Autor](#-autor)
 
 ---
 
@@ -210,37 +210,227 @@ baseUrl = http://localhost:8080
 | `productoId`   | Generado al crear producto   | ID del producto     |
 
 ---
-## 💡 Ejemplo de flujo completo (cURL)
-### 1. Crear franquicia
+## 💡 Ejemplos de Uso
+
+A continuación se muestra un flujo completo de uso de la API, desde la creación de una franquicia hasta la consulta de los productos con mayor stock.
+
+---
+
+###  1️⃣ Crear Franquicia
+
+**Request:**
+```http
+POST /api/franquicias
+Content-Type: application/json
+```
+
+**Body:**
+
+```json
+{
+  "nombre": "Franquicia Nacional"
+}
+```
+**Response:**
+
+```json
+{
+  "id": "67341c927f6b20b8c8a1a9dd",
+  "nombre": "Franquicia Nacional",
+  "sucursales": []
+}
+```
+**cURL:**
+
 ```bash
 curl -X POST http://localhost:8080/api/franquicias \
 -H "Content-Type: application/json" \
--d '{"nombre":"Franquicia Nacional"}'
+-d '{"nombre": "Franquicia Nacional"}'
 ```
 
-### 2. Crear sucursal
+### 2️⃣ Crear Sucursal dentro de una Franquicia
+**Request:**
+
+```http
+POST /api/franquicias/{franquiciaId}/sucursales
+Content-Type: application/json
+```
+
+**Body:**
+
+```json
+{
+  "nombre": "Sucursal Centro"
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": "67341cda52af3a2d9f5acb12",
+  "nombre": "Sucursal Centro",
+  "franquiciaId": "67341c927f6b20b8c8a1a9dd"
+}
+```
+
+**cURL:**
+
 ```bash
-curl -X POST http://localhost:8080/api/franquicias/<franquiciaId>/sucursales \
+curl -X POST http://localhost:8080/api/franquicias/67341c927f6b20b8c8a1a9dd/sucursales \
 -H "Content-Type: application/json" \
--d '{"nombre":"Sucursal Centro"}'
+-d '{"nombre": "Sucursal Centro"}'
 ```
 
-### 3. Crear producto
+### 3️⃣ Crear Producto en una Sucursal
+**Request:**
+
+```http
+POST /api/franquicias/{franquiciaId}/sucursales/{sucursalId}/productos
+Content-Type: application/json
+```
+**Body:**
+
+```json
+{
+  "nombre": "Laptop Dell",
+  "stock": 45
+}
+```
+**Response:**
+
+```json
+{
+  "id": "67341e9852af3a2d9f5acb89",
+  "nombre": "Laptop Dell",
+  "stock": 45,
+  "sucursalId": "67341cda52af3a2d9f5acb12"
+}
+```
+**cURL:**
 
 ```bash
-curl -X POST http://localhost:8080/api/franquicias/<franquiciaId>/sucursales/<sucursalId>/productos \
+curl -X POST http://localhost:8080/api/franquicias/67341c927f6b20b8c8a1a9dd/sucursales/67341cda52af3a2d9f5acb12/productos \
 -H "Content-Type: application/json" \
--d '{"nombre":"Laptop Dell","stock":50}'
+-d '{"nombre":"Laptop Dell","stock":45}'
 ```
 
-### 4. Modificar stock
+### 4️⃣ Actualizar el Nombre de un Producto
+**Request:**
+
+```http
+PUT /api/franquicias/{franquiciaId}/sucursales/{sucursalId}/productos/{productoId}
+Content-Type: application/json
+```
+
+**Body:**
+
+```json
+{
+  "nuevoNombre": "Laptop HP EliteBook"
+}
+```
+**Response:**
+
+```json
+{
+  "id": "67341e9852af3a2d9f5acb89",
+  "nombre": "Laptop HP EliteBook",
+  "stock": 45,
+  "sucursalId": "67341cda52af3a2d9f5acb12"
+}
+```
+**cURL:**
 
 ```bash
-curl -X PUT http://localhost:8080/api/franquicias/<franquiciaId>/sucursales/<sucursalId>/productos/<productoId>/stock \
+curl -X PUT http://localhost:8080/api/franquicias/67341c927f6b20b8c8a1a9dd/sucursales/67341cda52af3a2d9f5acb12/productos/67341e9852af3a2d9f5acb89 \
 -H "Content-Type: application/json" \
--d '{"nuevoStock":100}'
+-d '{"nuevoNombre":"Laptop HP EliteBook"}'
 ```
+### 5️⃣ Actualizar Stock de un Producto
+**Request:**
 
+```http
+PUT /api/franquicias/{franquiciaId}/sucursales/{sucursalId}/productos/{productoId}/stock
+Content-Type: application/json
+```
+**Body:**
+
+```json
+{
+  "nuevoStock": 120
+}
+```
+**Response:**
+
+```json
+{
+  "id": "67341e9852af3a2d9f5acb89",
+  "nombre": "Laptop HP EliteBook",
+  "stock": 120,
+  "sucursalId": "67341cda52af3a2d9f5acb12"
+}
+```
+**cURL:**
+
+```bash
+curl -X PUT http://localhost:8080/api/franquicias/67341c927f6b20b8c8a1a9dd/sucursales/67341cda52af3a2d9f5acb12/productos/67341e9852af3a2d9f5acb89/stock \
+-H "Content-Type: application/json" \
+-d '{"nuevoStock":120}'
+```
+### 6️⃣ Eliminar un Producto
+**Request:**
+
+```http
+DELETE /api/franquicias/{franquiciaId}/sucursales/{sucursalId}/productos/{productoId}
+```
+**Response:**
+
+```json
+{
+  "mensaje": "Producto eliminado correctamente"
+}
+```
+**cURL:**
+
+```bash
+curl -X DELETE http://localhost:8080/api/franquicias/67341c927f6b20b8c8a1a9dd/sucursales/67341cda52af3a2d9f5acb12/productos/67341e9852af3a2d9f5acb89
+```
+### 7️⃣ Consultar el Producto con Mayor Stock por Sucursal
+**Request:**
+
+```http
+GET /api/franquicias/{franquiciaId}/productos/top-stock
+```
+**Response:**
+
+```json
+[
+  {
+    "sucursalId": "67341cda52af3a2d9f5acb12",
+    "nombreSucursal": "Sucursal Centro",
+    "productoConMasStock": {
+      "id": "67341e9852af3a2d9f5acb89",
+      "nombre": "Laptop HP EliteBook",
+      "stock": 120
+    }
+  },
+  {
+    "sucursalId": "67341df752af3a2d9f5acb90",
+    "nombreSucursal": "Sucursal Norte",
+    "productoConMasStock": {
+      "id": "67341f8e52af3a2d9f5acb99",
+      "nombre": "Mouse Logitech",
+      "stock": 80
+    }
+  }
+]
+```
+**cURL:**
+
+```bash
+curl -X GET http://localhost:8080/api/franquicias/67341c927f6b20b8c8a1a9dd/producto
+```
 ## ✨ Buenas Prácticas Implementadas
 
 ### Arquitectura y Diseño
