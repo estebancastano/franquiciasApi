@@ -439,6 +439,7 @@ curl -X GET http://localhost:8080/api/franquicias/67341c927f6b20b8c8a1a9dd/produ
 - **Inmutabilidad**: Uso extensivo de campos `final` y objetos inmutables
 - **Principio de Responsabilidad Única**: Cada clase tiene una única responsabilidad
 - **Inyección de dependencias por constructor**: Facilita testing y hace explícitas las dependencias
+- **Aplicación de principios SOLID**: clases con una sola responsabilidad, abiertas a extensión, dependientes de interfaces y con bajo acoplamiento.
 
 ### Código Limpio
 
