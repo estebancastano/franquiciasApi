@@ -32,7 +32,7 @@ Cada franquicia puede tener múltiples sucursales, y cada sucursal maneja su pro
 ✅ Gestión y actualización de stock  
 ✅ Consulta del producto con más stock por sucursal  
 ✅ Persistencia con **MongoDB**  
-✅ Despliegue con **Docker**, **Docker Compose** y **Terraform**  
+✅ Despliegue con **Docker**, **Docker Compose**  
 ✅ Arquitectura limpia basada en DTOs  
 ✅ Documentación completa en Postman
 
